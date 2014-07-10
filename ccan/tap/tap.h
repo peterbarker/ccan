@@ -248,4 +248,42 @@ void plan_skip_all(const char *reason);
  */
 void (*tap_fail_callback)(void);
 
+
+
+
+/**
+ * is_str - OK if strings are equal
+ * @e1: expression for the variable string
+ * @e2: expression for the expected string
+ *
+ * If the strings strcmp to 0, the test passes.
+ *
+ * Example:
+ *	is_str(give_me_a_fred(),"fred");
+ */
+# define is_str(e1,e2, ...) (!strcmp((e1),(e2)) ?			\
+			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
+		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
+				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note comma.
+
+/**
+ * is_num - OK if arguments are numerically equal
+ * @e1: expression for the number
+ * @e2: expression for the expected number
+ *
+ * If the numbers are equal, the test passes.
+ *
+ * Example:
+ *	is_num(give_me_17(),17);
+ */
+# define is_num(e1,e2, ...) ((e1)==(e2) ?			\
+			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
+		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
+				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %d",e2),diag("     Got: %d",e1),0)) // diag is void; note comma.
+
+# define is_mem(e1,e2,e3, ...) (!memcmp((e1),(e2),(e3)) ?		\
+			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
+		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
+				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note commas.  Also FIXME: should probably hexdump the arguments upon failure rather than just dumping them
+
 #endif /* CCAN_TAP_H */
