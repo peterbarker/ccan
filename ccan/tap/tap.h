@@ -264,26 +264,22 @@ void (*tap_fail_callback)(void);
 # define is_str(e1,e2, ...) (!strcmp((e1),(e2)) ?			\
 			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
 		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
-				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note comma.
+				  "%s eq %s",#e1,#e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note comma.
 
 /**
- * is_num - OK if arguments are numerically equal
- * @e1: expression for the number
- * @e2: expression for the expected number
+ * is_mem - OK if buffers up to supplied length are equal
+ * @e1: expression for the variable string
+ * @e2: expression for the expected string
+ * @e3: length in buffer to check
  *
- * If the numbers are equal, the test passes.
+ * If the buffers memcmp to 0, the test passes.
  *
  * Example:
- *	is_num(give_me_17(),17);
+ *	is_mem(give_me_a_null_terminated_fred(),"fred",5);
  */
-# define is_num(e1,e2, ...) ((e1)==(e2) ?			\
-			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
-		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
-				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %d",e2),diag("     Got: %d",e1),0)) // diag is void; note comma.
-
 # define is_mem(e1,e2,e3, ...) (!memcmp((e1),(e2),(e3)) ?		\
 			     _gen_result(1, __func__, __FILE__, __LINE__,"%s eq %s",#e1,#e2) : \
 		     (_gen_result(0, __func__, __FILE__, __LINE__,	\
-				  "%s eq %s",#e1,#e2,e1,e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note commas.  Also FIXME: should probably hexdump the arguments upon failure rather than just dumping them
+				  "%s eq %s",#e1,#e2)) || (diag("Expected: %s",e2),diag("     Got: %s",e1),0)) // diag is void; note commas.  Also FIXME: should probably hexdump the arguments upon failure rather than just dumping them
 
 #endif /* CCAN_TAP_H */
